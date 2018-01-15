@@ -1,0 +1,2 @@
+# luckyguygx.github.io
+blog
