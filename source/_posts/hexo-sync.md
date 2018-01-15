@@ -1,5 +1,5 @@
 ---
-title: hexo-sync
+title: hexo博客搬迁
 date: 2017-01-15 10:12:47
 type: "tags"
 tags: [hexo]
