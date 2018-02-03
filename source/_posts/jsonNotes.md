@@ -5,6 +5,8 @@ type: "tags"
 tags: [flex css]
 ---
 1.
+效果图：
+![flex](/img/flex.jpg)
 ```
 <style>
         p {
