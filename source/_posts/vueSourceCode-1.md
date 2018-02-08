@@ -22,7 +22,7 @@ ___
 前两个参数不用多说，下面我们来细究下第三个参数：descriptor。对象里目前存在的属性描述符有两种主要形式：**数据描述符**和**存取描述符**。数据描述符是一个具有值的属性，该值可能是可写的，也可能不是可写的。访问器描述符是由getter-setter函数对描述的属性。**描述符必须是这两种形式之一；不能同时是两者**。
 
 ___
-###### 数据描述符：
+###### 数据描述符
   可设置的特性如下：
    value: 设置属性的值。
    writable: 值是否可以重写。true | false。
@@ -92,7 +92,7 @@ console.log(o.a); // undefined
 ```
 **注意点：如果只写了value，这个属性的特性中configurable，enumerable，writable都被默认为false**
 
-###### 存取器描述：
+###### 存取描述符
 
 * 基本用法：
 ```
@@ -126,4 +126,4 @@ enumerable: true | false
   ```
 **注意点：get或set不是必须成对出现，任写其一就可以。如果不设置方法，则get和set的默认值为undefined 。**
 
-
+ ![detail](/img/objectdefineproperty1.jpg)
