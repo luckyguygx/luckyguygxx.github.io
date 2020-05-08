@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="node," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="提到Node的模块必须要提到CommonJs因为node就是对该规范的实现，当然，node在实现中也是在遵循该规范的同时进行了取舍。那首先来剖析下CommonJs中对模块的定义：  CommonJs对模块的定义很简单，主要分为模块引用，模块定义，模块标识三部分。  模块引用：var math = require(‘math’);  // 如果不加扩展名，Node会按照.js、 .json 、.">
+<meta name="keywords" content="node">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Node中的模块">
+<meta property="og:url" content="https://luckyguygx.github.io/2018/02/26/node-module/index.html">
+<meta property="og:site_name" content="知识备忘录">
+<meta property="og:description" content="提到Node的模块必须要提到CommonJs因为node就是对该规范的实现，当然，node在实现中也是在遵循该规范的同时进行了取舍。那首先来剖析下CommonJs中对模块的定义：  CommonJs对模块的定义很简单，主要分为模块引用，模块定义，模块标识三部分。  模块引用：var math = require(‘math’);  // 如果不加扩展名，Node会按照.js、 .json 、.">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-05-08T08:57:52.026Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Node中的模块">
+<meta name="twitter:description" content="提到Node的模块必须要提到CommonJs因为node就是对该规范的实现，当然，node在实现中也是在遵循该规范的同时进行了取舍。那首先来剖析下CommonJs中对模块的定义：  CommonJs对模块的定义很简单，主要分为模块引用，模块定义，模块标识三部分。  模块引用：var math = require(‘math’);  // 如果不加扩展名，Node会按照.js、 .json 、.">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"always","offset":15,"offset_float":15,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://luckyguygx.github.io/2018/02/26/node-module/"/>
+
+
+
+
+
+  <title>Node中的模块 | 知识备忘录</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">知识备忘录</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">每天进步一点点儿</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-首页">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-book "></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-归档">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-book "></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-标签">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-book "></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-tags" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://luckyguygx.github.io/2018/02/26/node-module/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="crazyLucky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="知识备忘录">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">Node中的模块</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-02-26T13:37:24+08:00">
+                2018-02-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>  提到Node的模块必须要提到CommonJs因为node就是对该规范的实现，当然，node在实现中也是在遵循该规范的同时进行了取舍。那首先来剖析下CommonJs中对模块的定义：<br>  CommonJs对模块的定义很简单，主要分为模块引用，模块定义，模块标识三部分。</p>
+<ol>
+<li><p>模块引用：<br>var math = require(‘math’);  // 如果不加扩展名，Node会按照.js、 .json 、.node的次序补足扩展名依次尝试。<br><strong>需要注意的一点是在尝试的过程中需要调用fs模块阻塞式的判断文件是否存在，因为node是单线程所以会引起性能问题，所以如果是.node或者.json文件，最好还是带上后缀名</strong></p>
+</li>
+<li><p>模块定义：<br>exports对象用于导出当前模块的方法或者变量。 <strong>在模块中还存在一个module对象，它代表模块本身，exports是module的属性</strong>。<br>在Node中，一个文件就是一个模块，将方法挂载在exports对象上作为属性就可以导出了：<br>// test.js<br>exports.add = function(){<br>…<br>}<br>在另一个文件中：<br>// program.js<br>var math = require(‘test’);</p>
+</li>
+<li><p>模块标识：<br>模块标识其实就是传递给require()方法的参数，<strong>参数可以是符合小驼峰命名的字符串或者相对路径或者绝对路径</strong>。</p>
+<hr>
+<p><strong>CommonJs 模块有一个特点从以下的源码中很容易发现那就是模块可以多次加载，但是只会在第一次加载时运行一次，然后运行结果就被放进缓存了，以后再require改模块，会直接读取缓存结果。如果改动了代码想要让模块再次运行的话，必须要清除该模块的缓存</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">Module._load = function(request, parent, isMain) &#123; </span><br><span class="line"> // 计算绝对路径 </span><br><span class="line"> var filename = Module._resolveFilename(request, parent); </span><br><span class="line"> // 如果有缓存，取出缓存 </span><br><span class="line"> var cachedModule = Module._cache[filename]; </span><br><span class="line"> if (cachedModule) &#123; </span><br><span class="line"> return cachedModule.exports; </span><br><span class="line"> // 第二步：是否为内置模块 </span><br><span class="line"> if (NativeModule.exists(filename)) &#123; </span><br><span class="line"> return NativeModule.require(filename); </span><br><span class="line"> &#125; </span><br><span class="line"> // 第三步：生成模块实例，存入缓存</span><br><span class="line"> var module = new Module(filename, parent);</span><br><span class="line"> Module._cache[filename] = module; </span><br><span class="line"> // 第四步：加载模块 </span><br><span class="line"> try &#123; </span><br><span class="line"> module.load(filename); </span><br><span class="line"> hadException = false; &#125; </span><br><span class="line"> finally &#123; if (hadException) &#123; </span><br><span class="line"> delete Module._cache[filename];</span><br><span class="line"> &#125; </span><br><span class="line"> &#125; </span><br><span class="line"> // 第五步：输出模块的exports属性</span><br><span class="line"> return module.exports;</span><br><span class="line"> &#125;;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>清除缓存：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 清某个模块的缓存 </span><br><span class="line">delete require.cache[require.resolve(&apos;/*moduleName*/&apos;)] </span><br><span class="line"> // 清所有模块的缓存 </span><br><span class="line">Object.keys(require.cache).forEach(function(key) &#123; delete require.cache[key]; &#125;)</span><br></pre></td></tr></table></figure></p>
+<p>  在Node中，模块分为两类：一类是node提供的模块被称为核心模块（比如http，fs，path等），另一类是用户编写的模块称为文件模块。<br>  在Node中引入模块，需要经历三个步骤：</p>
+<ol>
+<li>路径分析</li>
+<li>文件定位</li>
+<li>编译执行<br>核心模块在node源码的编译过程中编译进了二进制执行代码，在node进程启动的时候已经被加载进内存中了，所以引用核心模块的时候不需要进行<strong>文件定位和编译执行</strong>，并且在路径分析上还进行优先判断，所以核心模块的加载速度是最快的。<br>文件模块则是在运行时动态加载，需要完整的路径分析，文件定位，编译执行的过程，相比要比核心模块速度要慢些。</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/node/" rel="tag"><i class="fa fa-tag"></i> node</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/02/06/vueSourceCode-1/" rel="next" title="Object.defineProperty">
+                <i class="fa fa-chevron-left"></i> Object.defineProperty
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/09/point5-md/" rel="prev" title="几种实现0.5像素线的方法">
+                几种实现0.5像素线的方法 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="crazyLucky" />
+          <p class="site-author-name" itemprop="name">crazyLucky</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/">
+                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-name">Artikel</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/BFC.html">
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">Tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/FrankFang/best-chinese-front-end-blogs/blob/master/README.md" target="_blank" title="优秀的前端博客列表">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                    
+                      优秀的前端博客列表
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://juejin.im/" target="_blank" title="掘金">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                    
+                      掘金
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhangxinxu.com/wordpress/" target="_blank" title="张鑫旭">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                    
+                      张鑫旭
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">crazyLucky</span>
+</div>
+
+
+<div class="powered-by">
+  Erstellt mit  <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

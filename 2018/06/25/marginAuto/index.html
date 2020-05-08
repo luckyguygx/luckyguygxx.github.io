@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="css,css世界学习总结," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="一般的垂直居中常用的几个方法无非display：table、css3的transform等常规方式。现分析总结一个不太使用的方式–牛逼的margin:auto. 原理剖析 一个绝对定位的元素，如果元素定位方向上有确定数值的时候流体特性就会发生变化。比如一个绝对定位的元素样式是{left:0;right:0}宽度撑满了或者{top:0,bottom:0}高度撑满了再或者四个方向都设置了值为0尺寸会">
+<meta name="keywords" content="css,css世界学习总结">
+<meta property="og:type" content="article">
+<meta property="og:title" content="css世界--margin:auto实现水平垂直居中">
+<meta property="og:url" content="https://luckyguygx.github.io/2018/06/25/marginAuto/index.html">
+<meta property="og:site_name" content="知识备忘录">
+<meta property="og:description" content="一般的垂直居中常用的几个方法无非display：table、css3的transform等常规方式。现分析总结一个不太使用的方式–牛逼的margin:auto. 原理剖析 一个绝对定位的元素，如果元素定位方向上有确定数值的时候流体特性就会发生变化。比如一个绝对定位的元素样式是{left:0;right:0}宽度撑满了或者{top:0,bottom:0}高度撑满了再或者四个方向都设置了值为0尺寸会">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://luckyguygx.github.io/img/margin-auto-img1.jpg">
+<meta property="og:updated_time" content="2020-05-08T08:57:52.025Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="css世界--margin:auto实现水平垂直居中">
+<meta name="twitter:description" content="一般的垂直居中常用的几个方法无非display：table、css3的transform等常规方式。现分析总结一个不太使用的方式–牛逼的margin:auto. 原理剖析 一个绝对定位的元素，如果元素定位方向上有确定数值的时候流体特性就会发生变化。比如一个绝对定位的元素样式是{left:0;right:0}宽度撑满了或者{top:0,bottom:0}高度撑满了再或者四个方向都设置了值为0尺寸会">
+<meta name="twitter:image" content="https://luckyguygx.github.io/img/margin-auto-img1.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"always","offset":15,"offset_float":15,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://luckyguygx.github.io/2018/06/25/marginAuto/"/>
+
+
+
+
+
+  <title>css世界--margin:auto实现水平垂直居中 | 知识备忘录</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">知识备忘录</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">每天进步一点点儿</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-首页">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-book "></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-归档">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-book "></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-标签">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-book "></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-css" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://luckyguygx.github.io/2018/06/25/marginAuto/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="crazyLucky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="知识备忘录">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">css世界--margin:auto实现水平垂直居中</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-25T14:57:24+08:00">
+                2018-06-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><strong> 一般的垂直居中常用的几个方法无非display：table、css3的transform等常规方式。现分析总结一个不太使用的方式–牛逼的margin:auto.</strong></p>
+<h4 id="原理剖析"><a href="#原理剖析" class="headerlink" title="原理剖析"></a>原理剖析</h4><p> 一个绝对定位的元素，如果元素定位方向上有确定数值的时候流体特性就会发生变化。比如一个绝对定位的元素样式是{left:0;right:0}宽度撑满了或者{top:0,bottom:0}高度撑满了再或者四个方向都设置了值为0尺寸会自动填充父级元素的可用尺寸，如果这时候再给元素设置宽度高度，那么原本应该被填充的空间就多余了部分，此时，如果又给该元素设置了margin:auto的话，这种绝对定位元素的margin:auto的填充规则和普通流体元素margin:auto的填充规则就是一样的：</p>
+<ul>
+<li><strong>如果一侧是定值，一侧是auto那么auto就为剩余空间大小；</strong></li>
+<li><strong>如果两侧都是auto，那就是平分剩余的空间；</strong></li>
+</ul>
+<h4 id="代码举例"><a href="#代码举例" class="headerlink" title="代码举例"></a>代码举例</h4><h5 id="html"><a href="#html" class="headerlink" title="html:"></a>html:</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;div id=&quot;dialog&quot; class=&quot;dialog&quot;&gt;</span><br><span class="line">    &lt;input type=&quot;button&quot; id=&quot;button&quot; class=&quot;button&quot; value=&quot;点击按钮实现水平垂直居中&quot; /&gt;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+<h5 id="css"><a href="#css" class="headerlink" title="css:"></a>css:</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">.dialog &#123; width: 500px; height: 300px; margin: auto; border: 1px solid #ddd; border-radius: 15px; background-color: #fff; box-shadow: 0 3px 18px rgba(0,0,0,.5); &#125;</span><br><span class="line">.dialog_absolute &#123; position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 1; &#125;</span><br><span class="line"></span><br><span class="line">/* .dialog_absolute &#123; position: absolute; top: 0; bottom:0; z-index: 1; &#125; */</span><br><span class="line"></span><br><span class="line">.button &#123; display: block; margin: 130px auto; width: 190px; height: 40px; font-size: 14px; &#125;</span><br></pre></td></tr></table></figure>
+<h5 id="js"><a href="#js" class="headerlink" title="js:"></a>js:</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">var eleDialog = document.getElementById(&quot;dialog&quot;),</span><br><span class="line">    eleButton = document.getElementById(&quot;button&quot;);</span><br><span class="line"></span><br><span class="line">eleButton.onclick = function() &#123;</span><br><span class="line">    if (eleDialog.className === &quot;dialog&quot;) &#123;</span><br><span class="line">        eleDialog.className = &quot;dialog dialog_absolute&quot;;</span><br><span class="line">        this.value = &quot;居中了，点击返回&quot;;    </span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        eleDialog.className = &quot;dialog&quot;;</span><br><span class="line">        this.value = &quot;点击按钮实现水平垂直居中&quot;;    </span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h4 id="效果截图"><a href="#效果截图" class="headerlink" title="效果截图"></a>效果截图</h4><p><img src="/img/margin-auto-img1.jpg" alt="实现效果"></p>
+<h4 id="在线效果查看"><a href="#在线效果查看" class="headerlink" title="在线效果查看"></a>在线效果查看</h4><p><a href="https://codepen.io/luckyguygx/pen/ERpgZN" target="_blank" rel="noopener">在线效果查看</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/css/" rel="tag"><i class="fa fa-tag"></i> css</a>
+          
+            <a href="/tags/css世界学习总结/" rel="tag"><i class="fa fa-tag"></i> css世界学习总结</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/22/gulp-build/" rel="next" title="gulp实现静态资源版本控制的试验">
+                <i class="fa fa-chevron-left"></i> gulp实现静态资源版本控制的试验
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/27/touch-exam/" rel="prev" title="css世界-css选择器">
+                css世界-css选择器 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Inhaltsverzeichnis
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Übersicht
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="crazyLucky" />
+          <p class="site-author-name" itemprop="name">crazyLucky</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/">
+                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-name">Artikel</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/BFC.html">
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">Tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/FrankFang/best-chinese-front-end-blogs/blob/master/README.md" target="_blank" title="优秀的前端博客列表">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                    
+                      优秀的前端博客列表
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://juejin.im/" target="_blank" title="掘金">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                    
+                      掘金
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhangxinxu.com/wordpress/" target="_blank" title="张鑫旭">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                    
+                      张鑫旭
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#原理剖析"><span class="nav-number">1.</span> <span class="nav-text">原理剖析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#代码举例"><span class="nav-number">2.</span> <span class="nav-text">代码举例</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#html"><span class="nav-number">2.1.</span> <span class="nav-text">html:</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#css"><span class="nav-number">2.2.</span> <span class="nav-text">css:</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#js"><span class="nav-number">2.3.</span> <span class="nav-text">js:</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#效果截图"><span class="nav-number">3.</span> <span class="nav-text">效果截图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#在线效果查看"><span class="nav-number">4.</span> <span class="nav-text">在线效果查看</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">crazyLucky</span>
+</div>
+
+
+<div class="powered-by">
+  Erstellt mit  <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
